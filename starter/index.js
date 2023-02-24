@@ -18,32 +18,44 @@ const render = require("./src/page-template.js");
 
 const teamArray = [];
 
-inquirer.prompt([
-    {
-        type: 'input',
-        message: "What is the manager's name?",
-        name: 'name'
-    },
-    {
-        type: 'input',
-        message: "What is the manager's ID?",
-        name: 'employeeID'
-    },
-    {
-        type: 'input',
-        message: "What is the manager's email address?",
-        name: 'email'
-    },
-    {
-        type: 'input',
-        message: 'What is the office number?',
-        name: 'officeNumber'
-    }
+function addManager() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: "What is the manager's name?",
+            name: 'name'
+        },
+        {
+            type: 'input',
+            message: "What is the manager's ID?",
+            name: 'employeeID'
+        },
+        {
+            type: 'input',
+            message: "What is the manager's email address?",
+            name: 'email'
+        },
+        {
+            type: 'input',
+            message: 'What is the office number?',
+            name: 'officeNumber'
+        }
 
-]).then(response => {
-    console.log(response)
+    ]).then(response => {
+        console.log(response)
+        const manager = new Manager(response.name, response.employeeID, response.email, response.officeNumber);
+        teamArray.push(manager);
+        addEmployee();
+    })
+}
 
-    manager = new Manager(response.name, response.employeeID, response.email, response.officeNumber)
+function addEmployee() {
+    inquirer.prompt([{
+        type: 'list',
+        message: "What type of team member would you like to add?",
+        choices: ['Engineer', 'Intern', 'No more employees to add']
+    }]).then(response => {
+        
 
-    teamArray.push(manager)
-})
+    })
+}
