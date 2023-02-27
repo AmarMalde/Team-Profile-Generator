@@ -28,7 +28,7 @@ function addManager() {
         {
             type: 'input',
             message: "What is the manager's ID?",
-            name: 'employeeID'
+            name: 'id'
         },
         {
             type: 'input',
@@ -43,8 +43,7 @@ function addManager() {
 
     ]).then(response => {
         console.log(response)
-        const manager = new Manager(response.name, response.employeeID, response.email, response.officeNumber);
-        teamArray.push(manager);
+        teamArray.push(new Manager(response.name, response.employeeID, response.email, response.officeNumber));
         addEmployee();
     })
 }
@@ -56,6 +55,5 @@ function addEmployee() {
         choices: ['Engineer', 'Intern', 'No more employees to add']
     }]).then(response => {
         
-
     })
 }
