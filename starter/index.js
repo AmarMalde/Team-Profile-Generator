@@ -18,6 +18,10 @@ const render = require("./src/page-template.js");
 
 const teamArray = [];
 
+function renderTeam() {
+    render(teamArray)
+}
+
 function addManager() {
     inquirer.prompt([
         {
@@ -69,3 +73,73 @@ function addEmployee() {
     });
 }
 
+function addEngineer() {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "What is the engineer's name?",
+          name: "name",
+        },
+        {
+          type: "input",
+          message: "What is the engineer's ID?",
+          name: "id",
+        },
+        {
+          type: "input",
+          message: "What is the engineer's email address?",
+          name: "email",
+        },
+        {
+          type: "input",
+          message: "What is the engineer's GitHub username?",
+          name: "github",
+        },
+      ])
+      .then((response) => {
+        const engineer = new Engineer(
+          response.name,
+          response.id,
+          response.email,
+          response.github
+        );
+        teamArray.push(engineer);
+        addTeamMember();
+      });
+  }
+  
+  function addIntern() {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "What is the intern's name?",
+          name: "name",
+        },
+        {
+          type: "input",
+          message: "What is the intern's ID?",
+          name: "id",
+        },
+        {
+          type: "input",
+          message: "What is the intern's email address?",
+          name: "email",
+        },
+        {
+          type: "input",
+          message: "What school is the intern attending?",
+          name: "school",
+        },
+      ])
+      .then((response) => {
+        const intern = new Intern(
+          response.name,
+          response.id,
+          response.email,
+          response.school
+        );
+        teamArray.push(intern);
+        addTeamMember();
+      })}
