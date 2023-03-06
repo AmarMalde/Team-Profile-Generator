@@ -18,10 +18,6 @@ const render = require("./src/page-template.js");
 
 const teamArray = [];
 
-function renderTeam() {
-    render(teamArray)
-}
-
 function addManager() {
     inquirer.prompt([
         {
@@ -46,10 +42,9 @@ function addManager() {
         }
 
     ]).then(response => {
-        console.log(response)
         const manager = new Manager(response.name, response.employeeID, response.email, response.officeNumber);
         teamArray.push(manager);
-        // addEmployee();
+        addEmployee();
     })
 }
 
@@ -68,7 +63,7 @@ function addEmployee() {
         } else if (response.employeeType === "Intern") {
             addIntern();
         } else {
-            renderTeam();
+            render(teamArray)
         }
     });
 }
@@ -105,7 +100,7 @@ function addEngineer() {
           response.github
         );
         teamArray.push(engineer);
-        addTeamMember();
+        addEmployee();
       });
   }
   
@@ -141,5 +136,5 @@ function addEngineer() {
           response.school
         );
         teamArray.push(intern);
-        addTeamMember();
+        addEmployee();
       })}
