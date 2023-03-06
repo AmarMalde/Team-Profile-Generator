@@ -28,7 +28,7 @@ function addManager() {
         {
             type: 'input',
             message: "What is the manager's ID?",
-            name: 'id'
+            name: 'employeeID'
         },
         {
             type: 'input',
@@ -43,17 +43,29 @@ function addManager() {
 
     ]).then(response => {
         console.log(response)
-        teamArray.push(new Manager(response.name, response.employeeID, response.email, response.officeNumber));
-        addEmployee();
+        const manager = new Manager(response.name, response.employeeID, response.email, response.officeNumber);
+        teamArray.push(manager);
+        // addEmployee();
     })
 }
+
+addManager();
+console.log(teamArray)
 
 function addEmployee() {
     inquirer.prompt([{
         type: 'list',
-        message: "What type of team member would you like to add?",
-        choices: ['Engineer', 'Intern', 'No more employees to add']
+        message: "Which kind of employee would you like to add?",
+        choices: ['Engineer', 'Intern', 'No more employees to add'],
+        name: 'employeeType'
     }]).then(response => {
-        
-    })
+        if (response.employeeType == 'Engineer') {
+            addEngineer();
+        } else if (response.employeeType === "Intern") {
+            addIntern();
+        } else {
+            renderTeam();
+        }
+    });
 }
+
