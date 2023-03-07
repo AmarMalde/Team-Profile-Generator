@@ -10,6 +10,8 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 
 const render = require("./src/page-template.js");
+
+
 //call render(myArrayOfTeamMembers)
 
 
@@ -18,98 +20,144 @@ const render = require("./src/page-template.js");
 
 const teamArray = [];
 
-function createManager() {
-  console.log("Please enter manager's information:");
-  inquirer.prompt([
-      {
-          type: 'input',
-          message: "What is the manager's name?",
-          name: 'name'
-      },
-      {
-          type: 'input',
-          message: "What is the manager's ID?",
-          name: 'employeeID'
-      },
-      {
-          type: 'input',
-          message: "What is the manager's email address?",
-          name: 'email'
-      },
-      {
-          type: 'input',
-          message: 'What is the office number?',
-          name: 'officeNumber'
-      }
-  ]).then(response => {
-      const manager = new Manager(response.name, response.employeeID, response.email, response.officeNumber);
-      teamArray.push(manager);
-      createTeam();
-  });
+function addManager() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: "What is the manager's name?",
+                name: "name",
+            },
+            {
+                type: "input",
+                message: "What is the manager's ID?",
+                name: "id",
+            },
+            {
+                type: "input",
+                message: "What is the manager's email address?",
+                name: "email",
+            },
+            {
+                type: "input",
+                message: "What is the manager's office number?",
+                name: "officeNumber",
+            },
+        ])
+        .then((response) => {
+            const manager = new Manager(
+                response.name,
+                response.id,
+                response.email,
+                response.officeNumber
+            );
+            teamArray.push(manager);
+            addTeamMember();
+        });
 }
 
-function createTeam() {
-  console.log("Please enter team member's information:");
-  inquirer.prompt([
-      {
-          type: 'list',
-          message: "What is the team member's role?",
-          name: 'role',
-          choices: ['Engineer', 'Intern', 'No more team members']
-      },
-      {
-          type: 'input',
-          message: "What is the team member's name?",
-          name: 'name'
-      },
-      {
-          type: 'input',
-          message: "What is the team member's ID?",
-          name: 'employeeID'
-      },
-      {
-          type: 'input',
-          message: "What is the team member's email address?",
-          name: 'email'
-      },
-      {
-          type: 'input',
-          message: "What is the engineer's Github username?",
-          name: 'github',
-          when: (response) => response.role === 'Engineer'
-      },
-      {
-          type: 'input',
-          message: "What school is the intern from?",
-          name: 'school',
-          when: (response) => response.role === 'Intern'
-      }
-  ]).then(response => {
-      if (response.role === 'Engineer') {
-          const engineer = new Engineer(response.name, response.employeeID, response.email, response.github);
-          teamArray.push(engineer);
-      } else if (response.role === 'Intern') {
-          const intern = new Intern(response.name, response.employeeID, response.email, response.school);
-          teamArray.push(intern);
-      } else {
-          console.log("End of team building");
-      }
-      if (response.role !== 'No more team members') {
-          createTeam();
-      } else {
-          renderTeam(teamArray);
-      }
-  });
+function addTeamMember() {
+    inquirer
+        .prompt([
+            {
+                type: "list",
+                message: "Which type of team member would you like to add?",
+                choices: ["Engineer", "Intern", "I don't want to add any more team members"],
+                name: "memberType",
+            },
+        ])
+        .then((response) => {
+            if (response.memberType === "Engineer") {
+                addEngineer();
+            } else if (response.memberType === "Intern") {
+                addIntern();
+            } else {
+                renderTeam(teamArray);
+            }
+        });
 }
 
-function renderTeam(teamArray) {
-  const html = render(teamArray);
-  fs.writeFile(outputPath, html, (err) => {
-      if (err) {
-          throw err;
-      }
-      console.log(`Team profile generated at ${outputPath}`);
-  });
+function addEngineer() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: "What is the engineer's name?",
+                name: "name",
+            },
+            {
+                type: "input",
+                message: "What is the engineer's ID?",
+                name: "id",
+            },
+            {
+                type: "input",
+                message: "What is the engineer's email address?",
+                name: "email",
+            },
+            {
+                type: "input",
+                message: "What is the engineer's GitHub username?",
+                name: "github",
+            },
+        ])
+        .then((response) => {
+            const engineer = new Engineer(
+                response.name,
+                response.id,
+                response.email,
+                response.github
+            );
+            teamArray.push(engineer);
+            addTeamMember();
+        });
 }
 
-createManager();
+function addIntern() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: "What is the intern's name?",
+                name: "name",
+            },
+            {
+                type: "input",
+                message: "What is the intern's ID?",
+                name: "id",
+            },
+            {
+                type: "input",
+                message: "What is the intern's email address?",
+                name: "email",
+            },
+            {
+                type: "input",
+                message: "What school is the intern attending?",
+                name: "school",
+            },
+        ])
+        .then((response) => {
+            const intern = new Intern(
+                response.name,
+                response.id,
+                response.email,
+                response.school
+            );
+            teamArray.push(intern);
+            addTeamMember();
+        });
+}
+
+
+function renderTeam(arr) {
+    const html = render(arr);
+    fs.writeFile(outputPath, html, (err) => {
+        if (err) {
+            throw err;
+        }
+        console.log(`Team profile generated at ${outputPath}`);
+    });
+}
+
+addManager()
